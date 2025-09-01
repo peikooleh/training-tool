@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title><span id="titleTxt">Парсер словарей — MVP</span></title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <header>
+    <h1><span id="titleTxt">Парсер словарей — MVP</span></h1>
+    <div class="theme-indicator" id="themeIndicator">Тема: авто</div>
+  </header>
+
+  <main>
+    <nav class="tabs">
+      <button class="tab-btn" data-tab="workTab">Работа со словами</button>
+      <button class="tab-btn" data-tab="exportTab">Предпросмотр и экспорт</button>
+    </nav>
+
+    <div id="workTab" class="tab-content">
+    <section class="panel settings">
+      <h2 id="hSettings">Настройки</h2>
+      <div class="row" id="rowLangs">
+        <label id="lblFrom">Родной язык (из):
+          <select id="langFrom">
+            <option value="uk" selected>Украинский</option>
+          </select>
+        </label>
+        <label id="lblTo">Изучаемый язык (в):
+          <select id="langTo">
+            <option value="en" selected>English</option>
+            <option value="de">Deutsch</option>
+            <option value="fr">Français</option>
+            <option value="es">Español</option>
+          </select>
+        </label>
+      </div>
+      <div class="row">
+        <label>Сервис перевода:
+          <select id="translateService">
+            <option value="libre" selected>LibreTranslate (бесплатно)</option>
+            <option value="mymemory">MyMemory (бесплатно)</option>
+            <option value="lingva">Lingva (публичный)</option>
+            <option value="none">Без перевода (вручную)</option>
+          </select>
+        </label>
+      </div>
+      <details>
+        <summary id="summaryApi">Настройки API (опционально)</summary>
+        <div class="row">
+          <label>Lingva URL: <input id="lingvaUrl" type="text" placeholder="https://lingva.ml" /></label>
+        </div>
+        <div class="row">
+          <label>LibreTranslate URL: <input id="libreUrl" type="text" placeholder="https://libretranslate.de" /></label>
+        </div>
+        <p class="hint" id="apiHint">⚠️ Прямые запросы к сторонним сайтам/страницам могут блокироваться CORS. Для URL используйте вставку текста или собственный прокси.</p>
+      </details>
+    </section>
+
+    <section class="panel dict-manager">
+      <h2 id="hDicts">Словари</h2>
+      <div class="row">
+        <select id="dictSelect"></select>
+      </div>
+      <div class="row">
+        <input type="text" id="newDictName" placeholder="Имя нового словаря"/>
+        <button id="createDictBtn">Создать</button>
+      </div>
+      <div class="row">
+        <input type="text" id="renameDictName" placeholder="Новое имя"/>
+        <button id="renameDictBtn" data-i18n="btnRename">Переименовать</button>
+      </div>
+      <div class="row">
+        <button id="deleteDictBtn" class="danger" data-i18n="btnDeleteDict">Удалить словарь</button>
+        <button id="clearDictBtn" class="danger" data-i18n="btnClearDict">Очистить текущий словарь</button>
+        <button id="loadDemoBtn" data-i18n="btnLoadDemo">Загрузить демо-словарь</button>
+      </div>
+    </section>
+
+    <section class="panel source">
+      <h2 id="hSource">Источник данных</h2>
+      <div class="row">
+        <input type="text" id="urlInput" placeholder="Вставьте URL (может не заработать из-за CORS)"/>
+        <button id="analyzeUrlBtn" data-i18n="btnAnalyzeUrl">Анализировать URL</button>
+      </div>
+      <div class="row">
+        <textarea id="textInput" rows="6" placeholder="Или вставьте текст сюда..." data-i18n-placeholder="phText"></textarea>
+      </div>
+      <div class="row">
+        <button id="analyzeTextBtn" data-i18n="btnAnalyzeText">Анализировать текст</button>
+      </div>
+      <div id="wordsPreview" class="preview"></div>
+      <div class="row"><button id="nextBatchBtn" style="display:none;">Ещё 10 слов</button></div>
+    </section>
+
+    <section class="panel work">
+      <h2 id="hWork">Работа со словами (активный словарь)</h2>
+      <div class="row">
+        <button id="addCustomWordBtn" data-i18n="btnAddWord">Добавить своё слово</button>
+      </div>
+      <div class="table-wrap">
+        <table id="wordsTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th data-i18n="thWord">Слово</th>
+              <th data-i18n="thTranslation">Перевод</th>
+              <th data-i18n="thExample">Пример (контекст)</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    </div>
+
+    <div id="exportTab" class="tab-content" style="display:none;">
+    <section class="panel export">
+      <h2 id="hExport">Предпросмотр и экспорт</h2>
+      <div class="table-wrap">
+        <table id="previewTable">
+          <thead>
+            <tr>
+              <th data-i18n="thWord">Слово</th>
+              <th data-i18n="thTranslation">Перевод</th>
+              <th data-i18n="thExample">Пример</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="row">
+        <button id="refreshPreviewBtn" data-i18n="btnRefreshPreview">Обновить предпросмотр</button>
+        <button id="exportCsvBtn" data-i18n="btnExportCsv">Экспорт CSV (Excel)</button>
+        <button id="exportJsonBtn" data-i18n="btnExportJson">Экспорт JSON</button>
+      </div>
+      <div class="row">
+        <label class="muted"><span id="lblImport">Импорт CSV/JSON:</span> <input id="importFile" type="file" accept=".csv,.json"/></label>
+        <button id="importBtn" data-i18n="btnImport">Импорт</button>
+      </div>
+    </section>
+  </div>
+  </main>
+
+  <footer>
+    <small>Работает локально в браузере. Онлайн-трафик только при переводе/парсинге. Автотема по времени суток.</small>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+/* Минималистичный стиль с автосменой темы */
+:root {
+  --bg: #f8f9fb;
+  --panel: #ffffff;
+  --text: #222;
+  --muted: #666;
+  --border: #e5e7eb;
+  --accent: #2563eb;
+  --danger: #dc2626;
+}
+
+[data-theme="dark"] {
+  --bg: #0f1115;
+  --panel: #151922;
+  --text: #e5e7eb;
+  --muted: #9aa3b2;
+  --border: #242a36;
+  --accent: #60a5fa;
+  --danger: #ef4444;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+header, footer {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+  background: var(--panel);
+}
+footer { border-top: 1px solid var(--border); border-bottom: none; }
+
+h1 { font-size: 20px; margin: 0; }
+h2 { font-size: 16px; margin: 0 0 12px; }
+small { color: var(--muted); }
+
+main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 16px;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+input[type="text"], input[type="password"], textarea, select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  outline: none;
+  border-radius: 8px;
+}
+
+button {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  cursor: pointer;
+}
+button:hover { border-color: var(--accent); }
+button.danger { color: var(--danger); border-color: var(--danger); }
+
+.table-wrap { overflow: auto; max-height: 320px; border: 1px solid var(--border); border-radius: 8px; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { padding: 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+th { position: sticky; top: 0; background: var(--panel); }
+
+.preview { color: var(--muted); font-size: 14px; }
+
+.theme-indicator { color: var(--muted); font-size: 12px; }
+
+@media (max-width: 900px) {
+  main { grid-template-columns: 1fr; }
+}
+
+/* Tabs */
+.tabs { display: flex; gap: 8px; margin: 0 0 8px 0; }
+.tab-btn { border: 1px solid var(--border); background: var(--panel); padding: 8px 12px; border-radius: 8px; cursor: pointer; }
+.tab-btn.active { border-color: var(--accent); }
+.tab-content { animation: fade .15s ease-out; }
+@keyframes fade { from { opacity: 0 } to { opacity: 1 } }
